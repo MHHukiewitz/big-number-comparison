@@ -5,8 +5,7 @@ import Big from "big.js"
 
 function useBN(rawAmount: string, price: number, decimals: number): BN {
     const amount = new BN(rawAmount)
-    const precisionFactor = new BN(decimals)
-
+    const precisionFactor = new BN(10 ** decimals)
     return new BN(amount.mul(new BN(
       price * precisionFactor.toNumber())
     ).div(precisionFactor.pow(new BN(2))));
@@ -27,23 +26,33 @@ function useBig(rawAmount: string, price: number, decimals: number): Big {
     return amount.div(decimals).mul(price)
 }
 
+const iterations = 100000;
 const decimals = 9;
-const amount = "1000000000000000000000000000000000000000000000000000000000000000";
-const price = 1;
+const amount = "10000000000000000000000000000";
+const price = 0.0001;
 
 console.log(decimals, amount, price)
+
 console.time('BN')
-useBN(amount, price, decimals)
+for (let i = 0; i < iterations; i++) {
+    useBN(amount, Math.random(), decimals)
+}
 console.timeEnd('BN')
 
 console.time('BigNumber')
-useBigNumber(amount, price, decimals)
+for (let i = 0; i < iterations; i++) {
+    useBigNumber(amount, Math.random(), decimals)
+}
 console.timeEnd('BigNumber')
 
 console.time('Decimal')
-useDecimal(amount, price, decimals)
+for (let i = 0; i < iterations; i++) {
+    useDecimal(amount, Math.random(), decimals)
+}
 console.timeEnd('Decimal')
 
 console.time('Big')
-useBig(amount, price, decimals)
+for (let i = 0; i < iterations; i++) {
+    useBig(amount, Math.random(), decimals)
+}
 console.timeEnd('Big')
